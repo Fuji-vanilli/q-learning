@@ -8,5 +8,7 @@
     <file url="file://$PROJECT_DIR$/services/gateway-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/question-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/quiz-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/services/result-quiz-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/services/user-service/src/main/java" charset="UTF-8" />
   </component>
 </project>
