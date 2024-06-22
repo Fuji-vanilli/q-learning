@@ -42,6 +42,18 @@ services:
     networks:
       - ql-networks
 
+  config-server:
+    build: ./services/config-server
+    container_name: config-server
+    ports:
+      - "8000:8000"
+    restart: always
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/actuator/health"]
+      interval: 20s
+
   discovery:
     build: ./services/discovery-server
     container_name: discovery-server
@@ -49,9 +61,14 @@ services:
       - "8761:8761"
     expose:
       - "8761"
+    environment:
+      URL_CONFIG_SERVER: http://config-server:8000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
       interval: 15s
+    depends_on:
+      config-server:
+        condition: service_healthy
     networks:
       - ql-networks
 

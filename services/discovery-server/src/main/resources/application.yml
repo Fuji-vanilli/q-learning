@@ -3,4 +3,4 @@ spring:
     name: discovery-service
 
   config:
-    import: optional:configserver:http://localhost:8000
+    import: optional:configserver:${URL_CONFIG_SERVER:http://localhost:8000}
