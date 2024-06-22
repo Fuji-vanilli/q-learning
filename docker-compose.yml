@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mongodb:
+    container_name: quiz-mongodb
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INIT_ROOT_USERNAME: ixml
+      MONGO_INIT_ROOT_PASSWORD: 1234
+    volumes:
+      - mongo-quiz-data:/data/db
+    networks:
+      - ql-networks
+
+networks:
+  ql-networks:
+
+volumes:
+  mongo-quiz-data:
+  mongo-category-data:
