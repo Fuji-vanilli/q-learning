@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/q-learning.iml" filepath="$PROJECT_DIR$/q-learning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../quiz-tech-repo/quiz-tech-repo.iml" filepath="$PROJECT_DIR$/../quiz-tech-repo/quiz-tech-repo.iml" />
     </modules>
   </component>
 </project>
