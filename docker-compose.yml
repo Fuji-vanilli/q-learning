@@ -15,7 +15,7 @@ services:
       - ql-networks
 
 
-  mongodb:
+  mongodb-quiz:
     container_name: quiz-mongodb
     image: mongo
     ports:
@@ -53,6 +53,8 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/actuator/health"]
       interval: 20s
+    networks:
+      - ql-networks
 
   discovery:
     build: ./services/discovery-server
@@ -71,6 +73,22 @@ services:
         condition: service_healthy
     networks:
       - ql-networks
+
+  quiz-service:
+    build: ./services/quiz-service
+    container_name: quiz-service-ms
+    ports:
+      - "6110:6110"
+    environment:
+      DISCOVERY_SERVER_URL: http://discovery:8761/eureka/
+      CONFIG_SERVER_URL: http://config-server:8000
+      MONGO_DB_QUIZ_URL: mongodb://ixml:1234@mongodb-quiz:27017/QUIZ-DB
+    depends_on:
+      discovery:
+        condition: service_healthy
+    networks:
+      - ql-networks
+
 
 networks:
   ql-networks:
