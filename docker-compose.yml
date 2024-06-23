@@ -1,16 +1,42 @@
 version: '3.8'
 
 services:
+  mysql-kc:
+    container_name: mysql-kc-db
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_USER: ixml
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: kc-db
+    networks:
+      - ql-networks
+    volumes:
+      - mysql-kc-data:/var/lib/mysql
+
   keycloak:
     container_name: keycloak-provider
     image: quay.io/keycloak/keycloak:24.0.2
     ports:
       - "9090:8080"
+    expose:
+      - "9090"
     environment:
       KEYCLOAK_ADMIN: ixml
       KEYCLOAK_ADMIN_PASSWORD: 1234
+      DB_VENDOR: mysql
+      DB_ADDR: mysql-kc
+      DB_DATABASE: kc-db
+      DB_USER: ixml
+      DB_PASSWORD: 1234
     command:
       - "start-dev"
+    depends_on:
+      - mysql-kc
+    volumes:
+      - keycloak_data:/opt/jboss/keycloak/standalone/data
     networks:
       - ql-networks
 
@@ -36,7 +62,7 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ixml
       ME_CONFIG_MONGODB_ADMINPASSWORD: 1234
-      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_SERVER: mongodb-quiz
       ME_CONFIG_BASICAUTH_USERNAME: ixml
       ME_CONFIG_BASICAUTH_PASSWORD: 1234
     networks:
@@ -80,19 +106,25 @@ services:
     ports:
       - "6110:6110"
     environment:
-      DISCOVERY_SERVER_URL: http://discovery:8761/eureka/
+      DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
       CONFIG_SERVER_URL: http://config-server:8000
       MONGO_DB_QUIZ_URL: mongodb://ixml:1234@mongodb-quiz:27017/QUIZ-DB
+      KEYCLOAK_ISSUER_URI: http://keycloak:9090/realms/quiz-tech
+      KEYCLOAK_KEY_URL: http://keycloak:9090/realms/quiz-tech/protocol/openid-connect/certs
     depends_on:
-      discovery:
-        condition: service_healthy
+      - discovery
+      - keycloak
+      - mongodb-quiz
     networks:
       - ql-networks
 
 
 networks:
   ql-networks:
+    driver: bridge
 
 volumes:
   mongo-quiz-data:
   mongo-category-data:
+  keycloak_data:
+  mysql-kc-data:
