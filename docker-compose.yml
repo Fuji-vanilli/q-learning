@@ -62,6 +62,18 @@ services:
     networks:
       - ql-networks
 
+  mongodb-category:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ixml
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+    volumes:
+      - mongo-category-data:/data/db
+    networks:
+      - ql-networks
+
   mongo-express:
     container_name: mongo-express-ms
     image: mongo-express
@@ -131,6 +143,28 @@ services:
       - mongodb-quiz
     networks:
       - ql-networks
+
+  category-service:
+    container_name: category-service-ms
+    build: ./services/category-service
+    ports:
+      - "6100:6100"
+    expose:
+      - "6100"
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8000
+      DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
+      SPRING_DATA_MONGO_HOST: mongodb-category
+      SPRING_DATA_MONGO_PORT: 27017
+      SPRING_DATA_MONGO_DATABASE: CATEGORY-DB
+      SPRING_DATA_MONGO_USERNAME: ixml
+      SPRING_DATA_MONGO_PASSWORD: 1234
+      KEYCLOAK_ISSUER_URI: http://keycloak:9090/realms/quiz-tech
+      KEYCLOAK_KEY_URL: http://keycloak:9090/realms/quiz-tech/protocol/openid-connect/certs
+    depends_on:
+      - keycloak
+      - discovery
+      - mongodb-category
 
 
 networks:
