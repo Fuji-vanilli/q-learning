@@ -126,6 +126,7 @@ services:
     ports:
       - "8200:8200"
     environment:
+      CONFIG_SERVER_URL: http://config-server:8000
       DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
       KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
       KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
