@@ -120,6 +120,21 @@ services:
     networks:
       - ql-networks
 
+  gateway-service:
+    container_name: gateway-service
+    build: ./services/gateway-service
+    ports:
+      - "8200:8200"
+    environment:
+      DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
+      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
+      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
+    depends_on:
+      - config-server
+      - discovery
+    networks:
+      - ql-networks
+
   quiz-service:
     build: ./services/quiz-service
     container_name: quiz-service-ms
