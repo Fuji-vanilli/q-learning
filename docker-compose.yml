@@ -65,7 +65,9 @@ services:
   mongodb-category:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
+    expose:
+      - "27018"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ixml
       MONGO_INITDB_ROOT_PASSWORD: 1234
