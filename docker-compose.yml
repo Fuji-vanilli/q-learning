@@ -167,7 +167,8 @@ services:
       - keycloak
       - discovery
       - mongodb-category
-
+    networks:
+      - ql-networks
 
 networks:
   ql-networks:
