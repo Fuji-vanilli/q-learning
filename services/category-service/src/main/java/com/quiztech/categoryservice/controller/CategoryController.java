@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface CategoryController {
     @PostMapping("add")
-    @PreAuthorize("hasRole('ROLE_app_admin')")
+    //@PreAuthorize("hasRole('ROLE_app_admin')")
     ResponseEntity<Response> add(@RequestBody CategoryRequest request);
     @PatchMapping("addQuiz")
     @PreAuthorize("hasRole('ROLE_app_admin')")
