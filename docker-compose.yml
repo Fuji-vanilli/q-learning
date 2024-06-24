@@ -17,7 +17,7 @@ services:
     volumes:
       - postgres-kc-data:/var/lib/postgresql/data
 
-  keycloak:
+  keycloak-ql:
     container_name: keycloak-provider
     image: quay.io/keycloak/keycloak:24.0.2
     ports:
@@ -135,11 +135,11 @@ services:
       DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
       CONFIG_SERVER_URL: http://config-server:8000
       MONGO_DB_QUIZ_URL: mongodb://ixml:1234@mongodb-quiz:27017/QUIZ-DB
-      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/quiz-tech
-      KEYCLOAK_KEY_URL: http://keycloak:8080/realms/quiz-tech/protocol/openid-connect/certs
+      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
+      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
     depends_on:
       - discovery
-      - keycloak
+      - keycloak-ql
       - mongodb-quiz
     networks:
       - ql-networks
@@ -159,10 +159,10 @@ services:
       SPRING_DATA_MONGO_DATABASE: CATEGORY-DB
       SPRING_DATA_MONGO_USERNAME: ixml
       SPRING_DATA_MONGO_PASSWORD: 1234
-      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/quiz-tech
-      KEYCLOAK_KEY_URL: http://keycloak:8080/realms/quiz-tech/protocol/openid-connect/certs
+      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
+      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
     depends_on:
-      - keycloak
+      - keycloak-ql
       - discovery
       - mongodb-category
     networks:
