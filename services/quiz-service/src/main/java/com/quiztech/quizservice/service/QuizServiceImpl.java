@@ -242,6 +242,7 @@ public class QuizServiceImpl implements QuizService {
     public Response all(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
+        log.info("all quizzes getted successfully!");
         return generateResponse(
                 HttpStatus.OK,
                 null,

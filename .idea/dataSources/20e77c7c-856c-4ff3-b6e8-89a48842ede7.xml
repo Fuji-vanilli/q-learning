@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@mongodb-quiz">
+  <database-model serializer="dbm" dbms="MONGO" family-id="MONGO" format-version="4.52">
+    <root id="1">
+      <ServerVersion>7.0.11</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="CATEGORY-DB"/>
+    <schema id="3" parent="1" name="QUIZ-DB"/>
+    <schema id="4" parent="1" name="admin"/>
+    <schema id="5" parent="1" name="config"/>
+    <schema id="6" parent="1" name="local"/>
+  </database-model>
+</dataSource>

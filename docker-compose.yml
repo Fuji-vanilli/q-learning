@@ -31,8 +31,7 @@ services:
       KC_DB_SCHEMA: public
       KEYCLOAK_ADMIN: root
       KEYCLOAK_ADMIN_PASSWORD: 1234
-    command:
-      - "start-dev"
+    command: ["start-dev", "--import-realm"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/realms/quiz-tech"]
       interval: 30s
@@ -133,6 +132,7 @@ services:
     depends_on:
       - config-server
       - discovery
+      - keycloak-ql
     networks:
       - ql-networks
 
@@ -151,8 +151,8 @@ services:
       DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
       CONFIG_SERVER_URL: http://config-server:8000
       MONGO_DB_QUIZ_URL: mongodb://ixml:1234@mongodb-quiz:27017/QUIZ-DB
-      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
-      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
+      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/q-learning-realm
+      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/q-learning-realm/protocol/openid-connect/certs
     depends_on:
       - discovery
       - keycloak-ql
@@ -175,8 +175,8 @@ services:
       SPRING_DATA_MONGO_DATABASE: CATEGORY-DB
       SPRING_DATA_MONGO_USERNAME: ixml
       SPRING_DATA_MONGO_PASSWORD: 1234
-      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
-      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
+      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/q-learning-realm
+      KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/q-learning-realm/protocol/openid-connect/certs
     depends_on:
       - keycloak-ql
       - discovery
