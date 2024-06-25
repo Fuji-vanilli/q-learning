@@ -50,9 +50,7 @@ services:
     container_name: quiz-mongodb
     image: mongo
     ports:
-      - "27018:27017"
-    expose:
-      - "27018"
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ixml
       MONGO_INITDB_ROOT_PASSWORD: 1234
@@ -64,9 +62,9 @@ services:
   mongodb-category:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     expose:
-      - "27017"
+      - "27018"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ixml
       MONGO_INITDB_ROOT_PASSWORD: 1234
@@ -129,7 +127,7 @@ services:
     environment:
       CONFIG_SERVER_URL: http://config-server:8000
       DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
-      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/quiz-tech
+      KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/q-learning-realm
       KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/quiz-tech/protocol/openid-connect/certs
     depends_on:
       - config-server
