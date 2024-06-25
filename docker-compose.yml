@@ -46,20 +46,8 @@ services:
     networks:
       - ql-networks
 
-  mongodb-quiz:
-    container_name: quiz-mongodb
-    image: mongo
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ixml
-      MONGO_INITDB_ROOT_PASSWORD: 1234
-    volumes:
-      - mongo-quiz-data:/data/db
-    networks:
-      - ql-networks
-
   mongodb-category:
+    container_name: category-mongodb
     image: mongo
     ports:
       - "27018:27017"
@@ -112,7 +100,7 @@ services:
       URL_CONFIG_SERVER: http://config-server:8000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 15s
+      interval: 20s
     depends_on:
       config-server:
         condition: service_healthy
@@ -137,44 +125,40 @@ services:
       - ql-networks
 
   quiz-service:
-    build: ./services/quiz-service
     container_name: quiz-service-ms
-    restart: always
+    build: ./services/quiz-service
+    env_file: ./.env
     ports:
       - "6110:6110"
     environment:
-      SPRING_DATA_MONGODB_HOST: mongodb-quiz
-      SPRING_DATA_MONGODB_PORT: 27018
-      SPRING_DATA_MONGODB_DATABASE: QUIZ-DB
-      SPRING_DATA_MONGODB_USERNAME: ixml
-      SPRING_DATA_MONGODB_PASSWORD: 1234
-      DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
+      SPRING_APPLICATION_JSON: '{
+                "spring.data.mongodb.uri" : "mongodb://$MONGODB_USER:$MONGODB_PASSWORD@mongodb-category:$MONGODB_DOCKER_PORT/$MONGODB_DATABASE?authSource=admin"
+              }'
       CONFIG_SERVER_URL: http://config-server:8000
-      MONGO_DB_QUIZ_URL: mongodb://ixml:1234@mongodb-quiz:27017/QUIZ-DB
+      DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
       KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/q-learning-realm
       KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/q-learning-realm/protocol/openid-connect/certs
     depends_on:
-      - discovery
       - keycloak-ql
-      - mongodb-quiz
+      - discovery
+      - mongodb-category
     networks:
       - ql-networks
 
   category-service:
     container_name: category-service-ms
     build: ./services/category-service
+    env_file: ./.env
     ports:
       - "6100:6100"
     expose:
       - "6100"
     environment:
+      SPRING_APPLICATION_JSON: '{
+                "spring.data.mongodb.uri" : "mongodb://$MONGODB_USER:$MONGODB_PASSWORD@mongodb-category:$MONGODB_DOCKER_PORT/$MONGODB_DATABASE?authSource=admin"
+              }'
       CONFIG_SERVER_URL: http://config-server:8000
       DISCOVERY_SERVER_URL: http://root_fuji:1234@discovery:8761/eureka/
-      SPRING_DATA_MONGO_HOST: mongodb-category
-      SPRING_DATA_MONGO_PORT: 27017
-      SPRING_DATA_MONGO_DATABASE: CATEGORY-DB
-      SPRING_DATA_MONGO_USERNAME: ixml
-      SPRING_DATA_MONGO_PASSWORD: 1234
       KEYCLOAK_ISSUER_URI: http://keycloak-ql:8080/realms/q-learning-realm
       KEYCLOAK_KEY_URL: http://keycloak-ql:8080/realms/q-learning-realm/protocol/openid-connect/certs
     depends_on:
